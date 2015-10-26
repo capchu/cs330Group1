@@ -31,10 +31,17 @@
       )
   }
 
-(test 3 3)
-
+;Test an empty list
+(test (take-while odd? empty) empty)
+;Test terminate on 3rd
 (test (take-while (lambda (n) (< n 4)) (list 1 3 4))
       (list 1 3))
-
-(test (take-while odd? (list 1 3 4))
-      (list 1 3))
+;Test terminate on second
+(test (take-while odd? (list 1 4 3))
+      (list 1))
+;Test terminate on first
+(test (take-while odd? (list 4 1 3))
+      empty)
+;test no termination
+(test (take-while odd? (list 3 1 3 7))
+      empty)
