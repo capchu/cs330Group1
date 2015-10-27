@@ -6,7 +6,10 @@
       (if print-only-errors
           ()
           (printf "Test Passed~n"))
-      (printf "Test Failed.~nActual:   ~S ~nExpected: ~S~n" l r)))
+        (printf "Test Failed.~nActual:   ~S ~nExpected: ~S~n" l r)
+        
+      )
+  )
 
 
 
@@ -32,7 +35,8 @@
   }
 
 ;Test an empty list
-(test (take-while odd? empty) empty)
+(test (take-while odd? empty)
+      empty)
 ;Test terminate on 3rd
 (test (take-while (lambda (n) (< n 4)) (list 1 3 4))
       (list 1 3))
@@ -44,4 +48,26 @@
       empty)
 ;test no termination
 (test (take-while odd? (list 3 1 3 7))
-      empty)
+      (list 3 1 3 7))
+
+
+
+
+
+
+
+;Contract:
+;Purpose:
+
+{define (build-table rows cols f)
+  3
+  }
+
+
+(define (lcs-length s1 s2)
+  (letrec [(lcs-table (build-table (+ 1 (string-length s1))
+                                   (+ 1 (string-length s2))
+                                   (lambda (i j) 0) ; replace the "0" with a suitable body
+                                   ))]
+    (vector-ref (vector-ref lcs-table (string-length s1)) (string-length s2))
+    ))
