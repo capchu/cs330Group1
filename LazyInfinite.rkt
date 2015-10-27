@@ -57,22 +57,28 @@
 
 
 
+
+;Contract:
+;Purpose:
+(define (build-vector num f)
+  (apply vector (build-list num f)))
+
+
 ;Contract: (build-table rows cols f) -> (vectorof (vectorof any))
 ;                            rows : exact-positive-intiger
 ;                            cols : exact-positive-intiger
 ;                               f : function taking 2 exact positive intigers and returns any
 ;Purpose: Lazily constructs a vector such that
 ;(vector-ref (vector-ref (build-table rows cols f) i) j) equals (f i j) when (< i rows) (< j cols)
-
 {define (build-table rows cols f)
-  (build-vector cols f)
+  (build-vector rows f)
   }
 
+(test (build-table 3 3 (lambda (i j) (+ i j))) "")
 
-;Contract:
-;Purpose:
-(define (build-vector num f)
-  (apply vector (build-list num f)))
+
+
+
 
 
 ;Contract
@@ -86,6 +92,8 @@
     ))
 
 
+(test (lcs-length "b"  "a" ) "")
+(test (lcs-length "b"  "b" ) "b")
 (test (lcs-length "bobindah"  "bobelhqz" ) "bobh")
 
 
