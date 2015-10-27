@@ -71,10 +71,11 @@
 ;Purpose: Lazily constructs a vector such that
 ;(vector-ref (vector-ref (build-table rows cols f) i) j) equals (f i j) when (< i rows) (< j cols)
 {define (build-table rows cols f)
-  (build-vector rows f)
+  (build-vector rows (lambda (x) (build-vector cols (lambda (y) (f x y)))))
   }
 
-(test (build-table 3 3 (lambda (i j) (+ i j))) "")
+;Test Basic table
+(test (vector-ref (vector-ref (build-table 3 3 (lambda (x y) (+ x y))) 2) 2) 4)
 
 
 
@@ -86,7 +87,11 @@
 (define (lcs-length s1 s2)
   (letrec [(lcs-table (build-table (+ 1 (string-length s1))
                                    (+ 1 (string-length s2))
-                                   (lambda (i j) (+ i j)) ; replace the "0" with a suitable body
+                                   (lambda (i j)
+                                     ;This Space will be where our part of the code is
+                                     0  ; replace the "0" with a suitable body
+
+                                     ) 
                                    ))]
     (vector-ref (vector-ref lcs-table (string-length s1)) (string-length s2))
     ))
