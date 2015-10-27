@@ -65,7 +65,7 @@
 ;(vector-ref (vector-ref (build-table rows cols f) i) j) equals (f i j) when (< i rows) (< j cols)
 
 {define (build-table rows cols f)
-  
+  (build-vector cols f)
   }
 
 
@@ -80,13 +80,13 @@
 (define (lcs-length s1 s2)
   (letrec [(lcs-table (build-table (+ 1 (string-length s1))
                                    (+ 1 (string-length s2))
-                                   (lambda (i j) 0) ; replace the "0" with a suitable body
+                                   (lambda (i j) (+ i j)) ; replace the "0" with a suitable body
                                    ))]
     (vector-ref (vector-ref lcs-table (string-length s1)) (string-length s2))
     ))
 
 
-
+(test (lcs-length "bobindah"  "bobelhqz" ) "bobh")
 
 
 
@@ -100,25 +100,19 @@
       #t
       #f))
 
-<<<<<<< HEAD
 
 ;; cons (p n) (eval-next-prime (+ n 1))
 ;(define primes (cons 2 (primes/fast)))
-=======
 ;; primes : (listof number)
 ;; infinite list of all prime numbers
->>>>>>> f0968c379713f96ddceda87327c8e792950f2333
 (define primes (cons 2 (eval-next-prime 3)))
 (define (eval-next-prime n)
   (if (prime? n)
       (cons n (eval-next-prime (+ n 1)))
       (eval-next-prime (+ n 1))))
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> f0968c379713f96ddceda87327c8e792950f2333
 ;; prime? : number -> boolean
 ;; determines whether positive integer n is prime
 (define (prime? n) 
