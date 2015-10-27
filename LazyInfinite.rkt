@@ -100,20 +100,37 @@
       #t
       #f))
 
+<<<<<<< HEAD
 
 ;; cons (p n) (eval-next-prime (+ n 1))
 ;(define primes (cons 2 (primes/fast)))
+=======
+;; primes : (listof number)
+;; infinite list of all prime numbers
+>>>>>>> f0968c379713f96ddceda87327c8e792950f2333
 (define primes (cons 2 (eval-next-prime 3)))
 (define (eval-next-prime n)
   (if (prime? n)
       (cons n (eval-next-prime (+ n 1)))
       (eval-next-prime (+ n 1))))
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f0968c379713f96ddceda87327c8e792950f2333
 ;; prime? : number -> boolean
-;; determines whether n is prime
+;; determines whether positive integer n is prime
 (define (prime? n) 
-  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (< x (sqrt n))) primes))))
-(test (list-ref primes 3) 5)
-(test (list-ref primes 10) 23)
+  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes))))
+(define (primeN n) 
+  (list-ref primes n))
+
+;; primes/fast : (listof number)
+;; infinite list of all prime numbers
+(define primes/fast (build-infinite-list primeN))
+
+;; prime?/fast : number -> boolean
+;; determines whether positive integer n is prime
+(define (prime?/fast n) 
+  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
