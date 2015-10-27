@@ -18,6 +18,7 @@
   (eval-next f 0))
 (define (eval-next f n) 
   (cons (f n) (eval-next f (+ n 1))))
+
 (test (list-ref (build-infinite-list (lambda(x) (* 2 x))) 5) 10)
 (test (list-ref (build-infinite-list (lambda(x) (- 3 x))) 0) 3)
 (test 3 3)
@@ -43,32 +44,39 @@
   }
 
 ;Test an empty list
-(test (take-while odd? empty)
-      empty)
+(test (take-while odd? empty) empty)
 ;Test terminate on 3rd
-(test (take-while (lambda (n) (< n 4)) (list 1 3 4))
-      (list 1 3))
+(test (take-while (lambda (n) (< n 4)) (list 1 3 4)) (list 1 3))
 ;Test terminate on second
-(test (take-while odd? (list 1 4 3))
-      (list 1))
+(test (take-while odd? (list 1 4 3)) (list 1))
 ;Test terminate on first
-(test (take-while odd? (list 4 1 3))
-      empty)
+(test (take-while odd? (list 4 1 3)) empty)
 ;test no termination
-(test (take-while odd? (list 3 1 3 7))
-      (list 3 1 3 7))
+(test (take-while odd? (list 3 1 3 7)) (list 3 1 3 7))
 
 
+
+
+;Contract: (build-table rows cols f) -> (vectorof (vectorof any))
+;                            rows : exact-positive-intiger
+;                            cols : exact-positive-intiger
+;                               f : function taking 2 exact positive intigers and returns any
+;Purpose: Lazily constructs a vector such that
+;(vector-ref (vector-ref (build-table rows cols f) i) j) equals (f i j) when (< i rows) (< j cols)
+
+{define (build-table rows cols f)
+  
+  }
 
 
 ;Contract:
 ;Purpose:
-
-{define (build-table rows cols f)
-  3
-  }
+(define (build-vector num f)
+  (apply vector (build-list num f)))
 
 
+;Contract
+;Purpose
 (define (lcs-length s1 s2)
   (letrec [(lcs-table (build-table (+ 1 (string-length s1))
                                    (+ 1 (string-length s2))
@@ -79,10 +87,19 @@
 
 
 
+
+
+
+
+
+
+
+
 (define (is-divisible-by a b) 
   (if (= (modulo a b) 0)
       #t
       #f))
+
 
 ;; cons (p n) (eval-next-prime (+ n 1))
 ;(define primes (cons 2 (primes/fast)))
@@ -91,6 +108,9 @@
   (if (prime? n)
       (cons n (eval-next-prime (+ n 1)))
       (eval-next-prime (+ n 1))))
+
+
+
 ;; prime? : number -> boolean
 ;; determines whether n is prime
 (define (prime? n) 
