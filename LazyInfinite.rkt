@@ -1,7 +1,7 @@
 #lang lazy
 (define print-only-errors #f)
 
-(define print-only-errors #t)
+;(define print-only-errors #t)
 (define (test l r)
   (if (equal? l r)
       (if print-only-errors
@@ -19,32 +19,6 @@
 (test (list-ref (build-infinite-list (lambda(x) (- 3 x))) 0) 3)
 (test 3 3)
 (test 3 2)
-
-(define (is-divisible-by a b) 
-  (if (= (modulo a b) 0)
-      true
-      false))
-
-
-
-
-;; cons (p n) (eval-next-prime (+ n 1))
-
-;(define primes (cons 2 (primes/fast)))
-
-(define primes (cons 2 (eval-next-prime 3)))
-(define (eval-next-prime n)
-  (if (prime? n)
-      (cons n (eval-next-prime (+ n 1)))
-      (eval-next-prime (+ n 1))))
-;; prime? : number -> boolean
-;; determines whether n is prime
-(define (prime? n) 
-  (not (ormap (lambda(z) (is-divisible-by n z)) (filter (lambda(x) (< x (sqrt n))) primes))))
-
-
-
-
 
 
 ;Contract: (take-while p l) -> list of any
@@ -80,3 +54,22 @@
 ;test no termination
 (test (take-while odd? (list 3 1 3 7))
       empty)
+
+(define (is-divisible-by a b) 
+  (if (= (modulo a b) 0)
+      #t
+      #f))
+
+;; cons (p n) (eval-next-prime (+ n 1))
+;(define primes (cons 2 (primes/fast)))
+(define primes (cons 2 (eval-next-prime 3)))
+(define (eval-next-prime n)
+  (if (prime? n)
+      (cons n (eval-next-prime (+ n 1)))
+      (eval-next-prime (+ n 1))))
+;; prime? : number -> boolean
+;; determines whether n is prime
+(define (prime? n) 
+  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (< x (sqrt n))) primes))))
+(test (list-ref primes 3) 5)
+(test (list-ref primes 10) 23)
