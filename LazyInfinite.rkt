@@ -93,6 +93,10 @@
                                    (+ 1 (string-length s2))
                                    (lambda (i j)
                                      ;This Space will be where our part of the code is
+                                     ;Wikipedia of non-lazy implementation of what we need to do
+                                     ;https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+                                     ;for the lazy part we need to start eval at the end node and have
+                                     ;it evaluate back to the start
                                      0  ; replace the "0" with a suitable body
 
                                      ) 
@@ -111,7 +115,8 @@
 
 
 
-
+;I talked to the TA and someone was trying to write the test cases for the primes parts and it looked like you
+;need to use the take-while function to test it.
 (define (is-divisible-by a b) 
   (if (= (modulo a b) 0)
       #t
