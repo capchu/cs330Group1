@@ -76,8 +76,12 @@
 
 ;Test Basic table
 (test (vector-ref (vector-ref (build-table 3 3 (lambda (x y) (+ x y))) 2) 2) 4)
-
-
+;Test Small table
+(test (vector-ref (vector-ref (build-table 2 1 (lambda (x y) (+ x y))) 1) 0) 1)
+;Test Large table
+(test (vector-ref (vector-ref (build-table 10 20 (lambda (x y) (+ x y))) 7) 13) 20)
+;Test 0 size table
+(test (vector-ref (vector-ref (build-table 1 1 (lambda (x y) (+ x y))) 0) 0) 0)
 
 
 
