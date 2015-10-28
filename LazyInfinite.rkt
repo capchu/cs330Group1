@@ -97,17 +97,33 @@
                                      ;https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
                                      ;for the lazy part we need to start eval at the end node and have
                                      ;it evaluate back to the start
-                                     0  ; replace the "0" with a suitable body
-
+                                       ; replace the "0" with a suitable body
+                                       (if (or (= i 0) (= j 0))
+                                          0
+                                          (if (char=? (string-ref s1 (- i 1)) (string-ref s2 (- j 1)))
+                                            (+ 1 (lcs-length 
+                                              (super-substring s1 0 (- i 1)) 
+                                              (super-substring s2 0 (- j 1))))
+                                            (max 
+                                              (lcs-length 
+                                                s1 
+                                                (super-substring s2 0 (- j 1)))
+                                              (lcs-length 
+                                                (super-substring s1 0 (- i 1)) 
+                                                s2))))
                                      ) 
                                    ))]
     (vector-ref (vector-ref lcs-table (string-length s1)) (string-length s2))
     ))
 
+(define (super-substring str begin end)
+  (if (< end begin)
+    ""
+    (substring str begin end)))
 
-(test (lcs-length "b"  "a" ) "")
-(test (lcs-length "b"  "b" ) "b")
-(test (lcs-length "bobindah"  "bobelhqz" ) "bobh")
+
+
+
 
 
 
