@@ -123,18 +123,14 @@
 
 
 
-;Contract
-;Purpose
+;Contract:  (lcs-length s1 s2) -> exact-positive-integer
+;              s1: string
+;              s2: string
+;Purpose:   Finds and returns the length using Longest common subsequence algorithm
 (define (lcs-length s1 s2)
   (letrec [(lcs-table (build-table (+ 1 (string-length s1))
                                    (+ 1 (string-length s2))
                                    (lambda (i j)
-                                     ;This Space will be where our part of the code is
-                                     ;Wikipedia of non-lazy implementation of what we need to do
-                                     ;https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-                                     ;for the lazy part we need to start eval at the end node and have
-                                     ;it evaluate back to the start
-                                       ; replace the "0" with a suitable body
                                        (if (or (= i 0) (= j 0))
                                           0
                                           (if (char=? (string-ref s1 (- i 1)) (string-ref s2 (- j 1)))
@@ -158,13 +154,16 @@
     ""
     (substring str begin end)))
 
-
-
-
-
-
-
-
+; Test from Wiki page (generic test)
+(test (lcs-length "AGCAT" "GAC") 2)
+; Generic test
+(test (lcs-length "CAT" "BAT") 2)
+; Test with all matching chars
+(test (lcs-length "FooBar" "FooBar") 6)
+; Test resonably large strings
+(test (lcs-length "qwertyuiopasdfghjklzxcvbnm" "qwertyuiopasdfghjklzxcvbnm") 26)
+; Test resonably large strings - with couple not matching
+(test (lcs-length "zxertyuiopasdfghjklzxcvbnm" "qwertyuiopasdfghjklzxcvbnm") 24)
 
 
 
