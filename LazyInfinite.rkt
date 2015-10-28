@@ -243,17 +243,8 @@
 
 ;; prime?/fast : number -> boolean
 ;; determines whether positive integer n is prime
-;OLD DEFINITION OF prime?/fast --- Did not work, multiple arity missmathces
-;(define (prime?/fast n) 
-;  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
-
-;Contract: (prime?/fast n) -> boolean
-;                    n : exact-positive-intiger
-;Putpose: Tell if a number is prime using primes/fast
-(define (prime?/fast n)
-  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes/fast)))
-  )
-
+(define (prime?/fast n) 
+  (= (first (reverse (take-while (lambda(x) (<= x n)) primes/fast))) n))
 
 ;Test Smallest Prime
 (test (prime?/fast 2) #t)
@@ -269,8 +260,8 @@
 (test (prime?/fast 3050) #f)
 
 
-
-
+;Test on zero
+(test (list-ref primes/fast 0) 2)
 ;Test A Small Prime
 (test (list-ref primes/fast 4) 11)
 ;Test A Large Prime
