@@ -20,6 +20,7 @@
 
 ;; build-infinite-list : procedure -> listof any/c
 ;; returns infinite list of results (f n) indexed by n
+
 ;Contract: (build-infinite-list f) -> list of any
 ;                            f : function that returns any
 ;Purpose: To build an infinite list containing elements created through f
@@ -166,25 +167,19 @@
 
 ;; prime? : number -> boolean
 ;; determines whether positive integer n is prime
+
 ;Contract: (prime? n) -> boolean
 ;                 n : exact-positive-intiger
 ;Purpose: Returns #t if n is a prime otherwise returns #f
 (define (prime? n) 
   (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes))))
-(define (primeN n) 
-  (list-ref primes n))
-
-(test (prime? 11) #t)
-
-
-
-
 
 
 ;; cons (p n) (eval-next-prime (+ n 1))
 ;(define primes (cons 2 (primes/fast)))
 ;; primes : (listof number)
 ;; infinite list of all prime numbers
+
 ;Contract: primes : list of exact-positive-intiger 
 ;Purpose: A list of all prime numbers
 (define primes (cons 2 (eval-next-prime 3)))
@@ -194,26 +189,74 @@
       (eval-next-prime (+ n 1))))
 
 
+;Test Smallest Prime
+(test (prime? 2) #t)
+;Test Largeish Prime
+(test (prime? 1051) #t)
+;Test Large Prime
+(test (prime? 3049) #t)
+;Test small composite
+(test (prime? 6) #f)
+;Test Largeish Composite
+(test (prime? 1052) #f)
+;Test Large Composite
+(test (prime? 3050) #f)
+
+
+;Test A Small Prime
 (test (list-ref primes 4) 11)
+;Test A Large Prime
+(test (list-ref primes 200) 1229)
 
 
 
 
 
 
+(define (primeN n) 
+  (list-ref primes n))
 
 
 ;; primes/fast : (listof number)
 ;; infinite list of all prime numbers
+
+;Contract: primes/fast -> infinite list of prime numbers
+;Purpose: To list all the prime numbers lazily
 (define primes/fast (build-infinite-list primeN))
-
-
-
-
 
 
 
 ;; prime?/fast : number -> boolean
 ;; determines whether positive integer n is prime
-(define (prime?/fast n) 
-  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
+;OLD DEFINITION OF prime?/fast --- Did not work, multiple arity missmathces
+;(define (prime?/fast n) 
+;  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
+
+;Contract: (prime?/fast n) -> boolean
+;                    n : exact-positive-intiger
+;Putpose: Tell if a number is prime using primes/fast
+(define (prime?/fast n)
+  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes/fast)))
+  )
+
+
+;Test Smallest Prime
+(test (prime?/fast 2) #t)
+;Test Largeish Prime
+(test (prime?/fast 1051) #t)
+;Test Large Prime
+(test (prime?/fast 3049) #t)
+;Test small composite
+(test (prime?/fast 6) #f)
+;Test Largeish Composite
+(test (prime?/fast 1052) #f)
+;Test Large Composite
+(test (prime?/fast 3050) #f)
+
+
+
+
+;Test A Small Prime
+(test (list-ref primes/fast 4) 11)
+;Test A Large Prime
+(test (list-ref primes/fast 200) 1229)
