@@ -1,4 +1,7 @@
 #lang lazy
+;By Chris Prestwich, Mike Free, Dane Bartholomew
+
+
 (define print-only-errors #f)
 
 ;(define print-only-errors #t)
