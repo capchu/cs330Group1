@@ -12,16 +12,33 @@
       )
   )
 
+
+
+
+
+
+
 ;; build-infinite-list : procedure -> listof any/c
 ;; returns infinite list of results (f n) indexed by n
+
+;Contract: (build-infinite-list f) -> list of any
+;                            f : function that returns any
+;Purpose: To build an infinite list containing elements created through f
 (define (build-infinite-list f)
   (eval-next f 0))
 (define (eval-next f n) 
   (cons (f n) (eval-next f (+ n 1))))
 
+;Basic Infinite List Test
 (test (list-ref (build-infinite-list (lambda(x) (* 2 x))) 5) 10)
+;Infinite Test Two
 (test (list-ref (build-infinite-list (lambda(x) (- 3 x))) 0) 3)
-(test 3 3)
+
+
+
+
+
+
 
 
 ;Contract: (take-while p l) -> list of any
@@ -53,15 +70,30 @@
 (test (take-while odd? (list 4 1 3)) empty)
 ;test no termination
 (test (take-while odd? (list 3 1 3 7)) (list 3 1 3 7))
+;Test infinite List
+(test (take-while even? (build-infinite-list (lambda(x) (+ 2 x)))) (list 2))
+;Actual infinite list test
+;(test (list-ref (take-while even? (build-infinite-list (lambda(x) (+ 2 x)))) 8) 16)
 
 
 
 
 
-;Contract:
-;Purpose:
+
+
+
+;Contract: (build-vector num f) -> a vector of whatever f returns
+;                       num : number if vectors
+;                         f : function with any return
+;Purpose: To build a Vector containing items based on f
 (define (build-vector num f)
   (apply vector (build-list num f)))
+;No Test Cases, This was given to us
+
+
+
+
+
 
 
 ;Contract: (build-table rows cols f) -> (vectorof (vectorof any))
@@ -82,6 +114,11 @@
 (test (vector-ref (vector-ref (build-table 10 20 (lambda (x y) (+ x y))) 7) 13) 20)
 ;Test 0 size table
 (test (vector-ref (vector-ref (build-table 1 1 (lambda (x y) (+ x y))) 0) 0) 0)
+
+
+
+
+
 
 
 
@@ -139,10 +176,28 @@
       #f))
 
 
+
+
+
+
+
+;; prime? : number -> boolean
+;; determines whether positive integer n is prime
+
+;Contract: (prime? n) -> boolean
+;                 n : exact-positive-intiger
+;Purpose: Returns #t if n is a prime otherwise returns #f
+(define (prime? n) 
+  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes))))
+
+
 ;; cons (p n) (eval-next-prime (+ n 1))
 ;(define primes (cons 2 (primes/fast)))
 ;; primes : (listof number)
 ;; infinite list of all prime numbers
+
+;Contract: primes : list of exact-positive-intiger 
+;Purpose: A list of all prime numbers
 (define primes (cons 2 (eval-next-prime 3)))
 (define (eval-next-prime n)
   (if (prime? n)
@@ -150,19 +205,74 @@
       (eval-next-prime (+ n 1))))
 
 
+;Test Smallest Prime
+(test (prime? 2) #t)
+;Test Largeish Prime
+(test (prime? 1051) #t)
+;Test Large Prime
+(test (prime? 3049) #t)
+;Test small composite
+(test (prime? 6) #f)
+;Test Largeish Composite
+(test (prime? 1052) #f)
+;Test Large Composite
+(test (prime? 3050) #f)
 
-;; prime? : number -> boolean
-;; determines whether positive integer n is prime
-(define (prime? n) 
-  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes))))
+
+;Test A Small Prime
+(test (list-ref primes 4) 11)
+;Test A Large Prime
+(test (list-ref primes 200) 1229)
+
+
+
+
+
+
 (define (primeN n) 
   (list-ref primes n))
 
+
 ;; primes/fast : (listof number)
 ;; infinite list of all prime numbers
+
+;Contract: primes/fast -> infinite list of prime numbers
+;Purpose: To list all the prime numbers lazily
 (define primes/fast (build-infinite-list primeN))
+
+
 
 ;; prime?/fast : number -> boolean
 ;; determines whether positive integer n is prime
-(define (prime?/fast n) 
-  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
+;OLD DEFINITION OF prime?/fast --- Did not work, multiple arity missmathces
+;(define (prime?/fast n) 
+;  (= (list-tail (take-while (lambda(x) (< (+ x 1))) primes/fast)) n))
+
+;Contract: (prime?/fast n) -> boolean
+;                    n : exact-positive-intiger
+;Putpose: Tell if a number is prime using primes/fast
+(define (prime?/fast n)
+  (not (ormap (lambda(z) (is-divisible-by n z)) (take-while (lambda(x) (<= x (sqrt n))) primes/fast)))
+  )
+
+
+;Test Smallest Prime
+(test (prime?/fast 2) #t)
+;Test Largeish Prime
+(test (prime?/fast 1051) #t)
+;Test Large Prime
+(test (prime?/fast 3049) #t)
+;Test small composite
+(test (prime?/fast 6) #f)
+;Test Largeish Composite
+(test (prime?/fast 1052) #f)
+;Test Large Composite
+(test (prime?/fast 3050) #f)
+
+
+
+
+;Test A Small Prime
+(test (list-ref primes/fast 4) 11)
+;Test A Large Prime
+(test (list-ref primes/fast 200) 1229)
